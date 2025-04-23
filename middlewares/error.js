@@ -63,6 +63,13 @@ module.exports = (err, req, res, next) => {
     const message = `Json Web Token is expired, try again`;
     err = new ErrorHandler(message, 400);
   }
+  if (err.name === 'SequelizeValidationError') {
+    // Get only the first error
+    const message = err.errors[0]?.message || 'Validation error';
+   err = new ErrorHandler(message,400)
+  }
+
+  
 
   res.status(err.statusCode || 500).json({
     success: false,

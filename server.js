@@ -1,12 +1,19 @@
 const app = require("./app");
-const connectDatabase = require("./config/database");
+const sequelize = require("./config/database");
+
 
 process.on("uncaughtException", (err) => {
   console.log(err);
   // process.exit(0);
 });
 
-connectDatabase();
+// connectDatabase();
+sequelize.authenticate().then(()=>{ 
+ console.log('Db connected');
+ sequelize.sync(); 
+}).catch((error)=>{
+  console.log('error while connection Db',error);
+})
 
 const port = process.env.PORT || 4000;
 const server = app.listen(port, () => {

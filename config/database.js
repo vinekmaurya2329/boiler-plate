@@ -1,13 +1,12 @@
-const mongoose = require("mongoose");
+const { Sequelize } = require('sequelize');
+require('dotenv').config({ path: './config/config.env' });
+const {DBPASSWORD,DBUSER,DBHOST} = process.env
 
-mongoose.set("strictQuery", false);
-
-module.exports = () => {
-  mongoose
-    .connect(process.env.DATABASE_URL)
-    .then((data) => {
-      console.log(`Database server connected at port: ${data.connection.port}`);
-      console.log(`Database server connected at host: ${data.connection.host}`);
-    })
-    .catch((e) => console.log(e));
-};
+const sequelize = new Sequelize('vinek_bidding', DBUSER, DBPASSWORD, {
+  host: DBHOST,
+  dialect: 'postgres' ,
+  retry: {
+    max: 5 // Retry 5 times
+  },
+});  
+module.exports = sequelize 
